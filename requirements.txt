@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+openai
+anthropic
+bleach
+python-multipart
+pdfplumber
+docx2txt
+pytesseract
+Pillow
+python-dotenv

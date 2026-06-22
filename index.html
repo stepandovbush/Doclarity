@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doclarity AI Chatbot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=38">
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="nav" aria-label="Primary navigation">
+            <a class="brand" href="#chatbot" aria-label="Doclarity home">
+                <strong class="brand-name"><span class="brand-clear">Do</span><span class="brand-split">c</span><span class="brand-path">larity</span></strong>
+            </a>
+            <div class="links" aria-label="Website sections">
+                <a href="#chatbot" data-i18n="nav_chatbot">Chatbot</a>
+                <a href="#how" data-i18n="nav_how">How it works</a>
+                <a href="#features" data-i18n="nav_features">Features</a>
+                <a href="#agencies" data-i18n="nav_agencies">Human &amp; Agency Support</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="chatbot">
+            <div class="hero-inner">
+                <div class="hero-copy">
+                    <div class="eyebrow" data-i18n="hero_eyebrow">Crisis-to-Action Translator</div>
+                    <h1 data-i18n="hero_title">Understand any official government document in seconds.</h1>
+                    <p data-i18n="hero_description">Upload a confusing government, legal, or medical letter and Doclarity instantly tells you what it means, what to do, and your exact deadline, in plain language. A web search gives you generic links and no privacy. Doclarity reads your actual document, keeps your information scrubbed and never stored, and guides you straight to your next step.</p>
+                    <div class="hero-actions">
+                        <a class="button light" href="#chatbot" data-i18n="hero_start">Start a document chat</a>
+                        <a class="button light" href="#agencies" data-i18n="hero_agency_support">Human &amp; Agency Support</a>
+                    </div>
+                </div>
+
+                <div class="chat-site" aria-label="Doclarity chatbot website demo">
+                    <aside class="upload-pane">
+                        <!-- Header -->
+                        <div class="pane-title">
+                            <div>
+                                <div class="eyebrow" data-i18n="intake_eyebrow">Document intake</div>
+                                <h2 data-i18n="intake_title">Upload a document</h2>
+                            </div>
+                            <span class="secure"><span class="dot"></span><span data-i18n="secure_label">Secure</span></span>
+                        </div>
+
+                        <!-- Language selector -->
+                        <div class="field">
+                            <label for="language" data-i18n="language_label">Choose your language</label>
+                            <select id="language">
+                                <option value="en">English</option>
+                                <option value="es">Spanish (Español)</option>
+                                <option value="ar">Arabic (العربية)</option>
+                                <option value="zh">Mandarin Chinese (中文)</option>
+                                <option value="fr">French (Français)</option>
+                                <option value="de">German (Deutsch)</option>
+                                <option value="it">Italian (Italiano)</option>
+                                <option value="ja">Japanese (日本語)</option>
+                                <option value="hi">Hindi (हिन्दी)</option>
+                            </select>
+                        </div>
+
+                        <!-- Drop zone — idle state -->
+                        <label class="dropzone" id="dropzoneLabel" for="fileUpload">
+                            <input id="fileUpload" type="file" accept="image/*,.pdf,.txt,.docx">
+                            <div class="dz-idle" id="dzIdle">
+                                <svg class="dz-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M12 16V4m0 0 4 4m-4-4-4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <strong data-i18n="upload_title">Drop a PDF or photo</strong>
+                                <span class="dz-sub">or click to browse files</span>
+                                <span class="dz-types">PDF · JPG · PNG · DOCX · TXT</span>
+                            </div>
+                            <!-- File selected state (hidden initially) -->
+                            <div class="dz-file" id="dzFile" style="display:none">
+                                <div class="file-type-badge" id="fileTypeBadge">PDF</div>
+                                <div class="file-meta">
+                                    <strong id="fileName" class="file-name-text">No file</strong>
+                                    <span id="fileSize" class="file-size-text"></span>
+                                </div>
+                                <button class="dz-change-btn" id="dzChangeBtn" type="button">Change</button>
+                            </div>
+                        </label>
+
+                        <!-- Processing steps (shown during analysis) -->
+                        <div class="process-track" id="processTrack" style="display:none">
+                            <div class="process-step" id="pStep1">
+                                <div class="ps-dot"></div>
+                                <span>Receiving</span>
+                            </div>
+                            <div class="process-connector"></div>
+                            <div class="process-step" id="pStep2">
+                                <div class="ps-dot"></div>
+                                <span>Scanning</span>
+                            </div>
+                            <div class="process-connector"></div>
+                            <div class="process-step" id="pStep3">
+                                <div class="ps-dot"></div>
+                                <span>Analyzing</span>
+                            </div>
+                        </div>
+
+                        <!-- Document ready state (shown after analysis) -->
+                        <div class="doc-ready-card" id="docReadyCard" style="display:none">
+                            <div class="doc-ready-check">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 6 9 17l-5-5" stroke="white" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="doc-ready-info">
+                                <strong>Analysis complete</strong>
+                                <span id="docReadyType" class="doc-ready-type">Government Document</span>
+                            </div>
+                            <button class="doc-rescan-btn" id="docRescanBtn" type="button" title="Upload new document">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                    <path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2.2"
+                                        stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"
+                                        stroke="currentColor" stroke-width="2.2"
+                                        stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Privacy note -->
+                        <p class="privacy-note">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                                    stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                            PII is scrubbed before processing. Nothing is stored after your session ends.
+                        </p>
+
+                        <!-- Analysis summary box — shown after document analysis completes -->
+                        <div class="analysis-summary-box" id="analysisSummaryBox" style="display:none">
+                            <div class="asb-header">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                        stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"
+                                        stroke-linejoin="round"/>
+                                    <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round"/>
+                                    <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round"/>
+                                    <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round"/>
+                                </svg>
+                                <span>Summary &amp; Recommendations</span>
+                            </div>
+                            <div class="asb-body" id="analysisSummaryText"></div>
+                        </div>
+                    </aside>
+
+                    <section class="chat-pane" aria-label="AI chatbot">
+                        <div class="chat-top">
+                            <div class="assistant-id">
+                                <div class="avatar">AI</div>
+                                <div>
+                                    <strong data-i18n="chatbot_name">Doclarity Chatbot</strong>
+                                    <span id="chatStatus" data-i18n="chat_status">Ready to help</span>
+                                </div>
+                            </div>
+                            <span id="languageBadge" class="language-badge">English</span>
+                        </div>
+
+                        <div id="messages" class="messages" role="log" aria-label="Chat messages"></div>
+
+                        <form id="chatForm" class="chat-form">
+                            <div class="input-group">
+                                <input id="chatInput" type="text" placeholder="Type your question"
+                                    data-i18n-placeholder="chat_placeholder" aria-label="Chat input" autocomplete="off">
+                                <button type="submit" aria-label="Send message">Send</button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+        <section class="how" id="how">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-i18n="how_title">How Doclarity Works</h2>
+                    <p data-i18n="how_description">A simple 4-step process to understand your government documents.</p>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3 data-i18n="step_upload_title">Upload or Describe</h3>
+                        <p data-i18n="step_upload_desc">Scan a letter, upload a PDF, or describe your situation in plain
+                            language.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3 data-i18n="step_translate_title">Translate & Understand</h3>
+                        <p data-i18n="step_translate_desc">The document is converted into your language while important
+                            terms stay clear.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3 data-i18n="step_explain_title">Get Clear Summary</h3>
+                        <p data-i18n="step_explain_desc">Doclarity summarizes what the letter means and what matters
+                            most.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3 data-i18n="step_guide_title">Get Guidance</h3>
+                        <p data-i18n="step_guide_desc">Receive next steps and ask follow-up questions for personalized
+                            help.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-i18n="features_title">What Doclarity Provides</h2>
+                    <p data-i18n="features_description">Comprehensive support designed for clarity and peace of mind.
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_summary_title">Clear Summaries</h3>
+                        <p data-i18n="feature_summary_desc">Government language is rewritten into supportive,
+                            plain-language explanations you can understand.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_action_title">Next Steps</h3>
+                        <p data-i18n="feature_action_desc">We pull out exactly what you need to do and when, so you know
+                            what is urgent.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_correct_title">Ask Questions</h3>
+                        <p data-i18n="feature_correct_desc">Chat with the AI to clarify details, correct information,
+                            and get personalized guidance for your situation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_multilingual_title">Multilingual</h3>
+                        <p data-i18n="feature_multilingual_desc">The entire interface supports your chosen language for
+                            explanations and guidance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_encryption_title">End-to-End Encrypted</h3>
+                        <p data-i18n="feature_encryption_desc">All your documents and conversations are encrypted with
+                            military-grade encryption, ensuring only you can access your information.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_privacy_title">Zero Data Retention</h3>
+                        <p data-i18n="feature_privacy_desc">We never share your personal documents with third parties, sell
+                            them, or keep them. Your data stays secure and is deleted the moment your session ends.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_security_support_title">Always Available Support</h3>
+                        <p data-i18n="feature_security_support_desc">Get instant answers 24/7 to your questions about
+                            government documents. No waiting, no appointments needed. Doclarity is here whenever you
+                            need guidance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 data-i18n="feature_understanding_title">Complete Understanding</h3>
+                        <p data-i18n="feature_understanding_desc">We break down complex government language into simple
+                            explanations. Every term, every requirement, every deadline is made clear so you feel
+                            confident taking action.</p>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="why-choose" id="why-choose">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-i18n="why_title">Why Choose Doclarity?</h2>
+                    <p data-i18n="why_description">Built for immigrants, by people who understand your needs.</p>
+                </div>
+                <div class="why-grid">
+                    <div class="why-card">
+                        <h3 data-i18n="why_clarify_title">Knows What's Urgent</h3>
+                        <p data-i18n="why_clarify_desc">Doclarity flags how critical your document is and pulls out your
+                            exact deadline, so you know what needs action today, not next week.</p>
+                    </div>
+                    <div class="why-card">
+                        <h3 data-i18n="why_honest_title">Private by Design</h3>
+                        <p data-i18n="why_honest_desc">Your document and personal details are scrubbed and never stored.
+                            Nothing you upload is saved, sold, or shared.</p>
+                    </div>
+                    <div class="why-card">
+                        <h3 data-i18n="why_supportive_title">Turns Words Into a Plan</h3>
+                        <p data-i18n="why_supportive_desc">We don't just explain your letter. We turn it into a clear,
+                            step-by-step checklist so you know exactly what to do and when.</p>
+                    </div>
+                    <div class="why-card">
+                        <h3 data-i18n="why_benefits_title">Real Human Backup</h3>
+                        <p data-i18n="why_benefits_desc">When a decision is too important for AI alone, Doclarity connects
+                            you to free, qualified human help matched to your specific document.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="agencies" id="agencies">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-i18n="agencies_title">Human &amp; Agency Support</h2>
+                    <p data-i18n="agencies_description">When you need to speak with a human representative, here are
+                        official government agencies and resources worldwide.</p>
+                </div>
+
+                <div class="agencies-tabs">
+                    <button class="tab-button active" data-tab="usa" data-i18n="tab_usa">United States</button>
+                    <button class="tab-button" data-tab="canada" data-i18n="tab_canada">Canada</button>
+                    <button class="tab-button" data-tab="uk" data-i18n="tab_uk">United Kingdom</button>
+                    <button class="tab-button" data-tab="mexico" data-i18n="tab_mexico">Mexico</button>
+                    <button class="tab-button" data-tab="eu" data-i18n="tab_eu">European Union</button>
+                    <button class="tab-button" data-tab="global" data-i18n="tab_global">Global Resources</button>
+                </div>
+
+                <div class="agencies-content">
+                    <div class="tab-content active" id="usa-content">
+                        <h3 data-i18n="agencies_usa_title">United States Government Agencies</h3>
+                        <div class="agency-list">
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_uscis_name">USCIS (Immigration Services)</h4>
+                                <p data-i18n="agency_uscis_desc">Handles immigration, visas, green cards, and
+                                    citizenship.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-800-375-5283</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.uscis.gov"
+                                        target="_blank">uscis.gov</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_irs_name">IRS (Tax Services)</h4>
+                                <p data-i18n="agency_irs_desc">Handles tax returns, income verification, and tax
+                                    questions.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-800-829-1040</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.irs.gov"
+                                        target="_blank">irs.gov</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_ssa_name">Social Security Administration</h4>
+                                <p data-i18n="agency_ssa_desc">Handles social security numbers, benefits, and work
+                                    authorization.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-800-772-1213</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.ssa.gov"
+                                        target="_blank">ssa.gov</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_hud_name">HUD (Housing)</h4>
+                                <p data-i18n="agency_hud_desc">Handles housing assistance, fair housing, and landlord
+                                    disputes.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-202-708-1112</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.hud.gov"
+                                        target="_blank">hud.gov</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_doe_name">Department of Education</h4>
+                                <p data-i18n="agency_doe_desc">Handles student aid, loans, and educational programs.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-800-872-5327</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.ed.gov"
+                                        target="_blank">ed.gov</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_cms_name">CMS (Healthcare)</h4>
+                                <p data-i18n="agency_cms_desc">Handles Medicare, Medicaid, and health insurance
+                                    questions.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-800-633-4227</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.cms.gov"
+                                        target="_blank">cms.gov</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="canada-content">
+                        <h3 data-i18n="agencies_canada_title">Canadian Government Agencies</h3>
+                        <div class="agency-list">
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_ircc_name">IRCC (Immigration)</h4>
+                                <p data-i18n="agency_ircc_desc">Handles immigration, visas, and permanent residence.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-888-242-2342</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.canada.ca/immigration"
+                                        target="_blank">canada.ca/immigration</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_cra_name">CRA (Tax Services)</h4>
+                                <p data-i18n="agency_cra_desc">Handles tax returns and income verification.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-800-959-5525</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.canada.ca/taxes"
+                                        target="_blank">canada.ca/taxes</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_esdc_name">ESDC (Employment)</h4>
+                                <p data-i18n="agency_esdc_desc">Handles employment insurance and job services.</p>
+                                <p class="contact"><strong>Phone:</strong> 1-866-864-9735</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.canada.ca/employment"
+                                        target="_blank">canada.ca/employment</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="uk-content">
+                        <h3 data-i18n="agencies_uk_title">United Kingdom Government Agencies</h3>
+                        <div class="agency-list">
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_ukvi_name">UKVI (Immigration)</h4>
+                                <p data-i18n="agency_ukvi_desc">Handles visas, residence permits, and immigration.</p>
+                                <p class="contact"><strong>Phone:</strong> +44 (0)300 123 2241</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.gov.uk/immigration"
+                                        target="_blank">gov.uk/immigration</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_hmrc_name">HMRC (Tax Services)</h4>
+                                <p data-i18n="agency_hmrc_desc">Handles tax returns and income verification.</p>
+                                <p class="contact"><strong>Phone:</strong> +44 (0)300 200 3300</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.gov.uk/hmrc"
+                                        target="_blank">gov.uk/hmrc</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_dwp_name">DWP (Benefits)</h4>
+                                <p data-i18n="agency_dwp_desc">Handles social benefits and welfare support.</p>
+                                <p class="contact"><strong>Phone:</strong> +44 (0)800 055 6688</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.gov.uk/benefits"
+                                        target="_blank">gov.uk/benefits</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="mexico-content">
+                        <h3 data-i18n="agencies_mexico_title">Mexican Government Agencies</h3>
+                        <div class="agency-list">
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_inm_name">INM (Immigration)</h4>
+                                <p data-i18n="agency_inm_desc">Handles immigration and residency permits.</p>
+                                <p class="contact"><strong>Phone:</strong> +52 (55) 2128-2700</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.gob.mx/inm"
+                                        target="_blank">gob.mx/inm</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_sat_name">SAT (Tax Services)</h4>
+                                <p data-i18n="agency_sat_desc">Handles tax returns and income verification.</p>
+                                <p class="contact"><strong>Phone:</strong> +52 (55) 5004-1000</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.gob.mx/sat"
+                                        target="_blank">gob.mx/sat</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="eu-content">
+                        <h3 data-i18n="agencies_eu_title">European Union Agencies</h3>
+                        <div class="agency-list">
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_eu_immigration_name">EU Immigration Services</h4>
+                                <p data-i18n="agency_eu_immigration_desc">Handles visas and residency across EU member
+                                    states.</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://ec.europa.eu/home-affairs"
+                                        target="_blank">ec.europa.eu/home-affairs</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_eu_tax_name">EU Tax Services</h4>
+                                <p data-i18n="agency_eu_tax_desc">Handles tax coordination across EU member states.</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://ec.europa.eu/taxation"
+                                        target="_blank">ec.europa.eu/taxation</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="global-content">
+                        <h3 data-i18n="agencies_global_title">Global Resources</h3>
+                        <div class="agency-list">
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_un_name">United Nations</h4>
+                                <p data-i18n="agency_un_desc">International support for human rights and refugee
+                                    services.</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.un.org"
+                                        target="_blank">un.org</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_iom_name">International Organization for Migration</h4>
+                                <p data-i18n="agency_iom_desc">Provides migration assistance and support worldwide.</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.iom.int"
+                                        target="_blank">iom.int</a></p>
+                            </div>
+                            <div class="agency-card">
+                                <h4 data-i18n="agency_unhcr_name">UNHCR (Refugees)</h4>
+                                <p data-i18n="agency_unhcr_desc">Provides support for refugees and asylum seekers
+                                    globally.</p>
+                                <p class="contact"><strong>Website:</strong> <a href="https://www.unhcr.org"
+                                        target="_blank">unhcr.org</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p data-i18n="footer_title">Doclarity AI Chatbot</p>
+            <p data-i18n="footer_description">Helping immigrants understand government documents in their own language.
+            </p>
+        </div>
+    </footer>
+
+    <script src="translations.js?v=16"></script>
+    <script src="translation-secure.js?v=3"></script>
+    <script src="security.js?v=4"></script>
+    <script src="script.js?v=24"></script>
+</body>
+
+</html>
